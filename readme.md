@@ -8,4 +8,5 @@ Create a simple REST service which will return details of given Github repositor
     number of stargazers
     date of creation (ISO format)
 
-The API of the service should look as follows: GET /repositories/{owner}/{repository-name} { "fullName": "...", "description": "...", "cloneUrl": "...", "stars": 0, "createdAt": "..." }
+The API of the service should look as follows: GET /repositories/{owner}/{repository-name}
+{ "fullName": "...", "description": "...", "cloneUrl": "...", "stars": 0, "createdAt": "..." }
