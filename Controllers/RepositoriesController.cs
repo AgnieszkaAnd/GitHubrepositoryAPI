@@ -26,21 +26,46 @@ namespace GitHubRepositoryAPI.Controllers {
         public async Task<IEnumerable<Repository>> Get()
         {
             HttpClient client = _httpClientFactory.CreateClient();
+            client = ConfigureClientAndGetRequest(client);
+
+            var streamTask = client.GetStreamAsync("https://api.github.com/orgs/dotnet/repos");
+            var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
+
+            return repositories;
+        }
+
+        [HttpGet]
+        [Route("{owner}")]
+        public async Task<IEnumerable<Repository>> GetUserRepos(string owner) {
+            HttpClient client = _httpClientFactory.CreateClient();
+            client = ConfigureClientAndGetRequest(client);
+
+            var streamTask = client.GetStreamAsync($"https://api.github.com/users/{owner}/repos");
+            var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
+
+            return repositories;
+        }
+
+        [HttpGet]
+        [Route("{owner}/{repositoryName}")]
+        public async Task<Repository> GetUserRepos(string owner, string repositoryName) {
+            HttpClient client = _httpClientFactory.CreateClient();
+            client = ConfigureClientAndGetRequest(client);
+
+            var streamTask = client.GetStreamAsync($"https://api.github.com/repos/{owner}/{repositoryName}");
+            var repository = await JsonSerializer.DeserializeAsync<Repository>(await streamTask);
+
+            return repository;
+        }
+
+        private HttpClient ConfigureClientAndGetRequest(HttpClient client)
+        {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
             client.DefaultRequestHeaders.Add("User-Agent", ".Net Foundation Repository Reporter");
 
-            var streamTask = client.GetStreamAsync("https://api.github.com/orgs/dotnet/repos");
-            var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
-
-            foreach (var repo in repositories)
-            {
-                Console.WriteLine(repo.Name);
-            }
-
-            return repositories;
-
+            return client;
         }
     }
 }

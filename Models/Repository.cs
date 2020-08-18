@@ -4,25 +4,20 @@ using System.Text.Json.Serialization;
 namespace GitHubRepositoryAPI.Models {
     public class Repository {
 
-        [JsonPropertyName("name")]
+        [JsonPropertyName("full_name")]
         public string Name { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        [JsonPropertyName("html_url")]
-        public Uri GitHubHomeUrl { get; set; }
+        [JsonPropertyName("clone_url")]
+        public Uri GitHubCloneUrl { get; set; }
 
-        [JsonPropertyName("homepage")]
-        public Uri Homepage { get; set; }
+        [JsonPropertyName("stargazers_count")]
+        public int StargazersNb { get; set; }
 
-        [JsonPropertyName("watchers")]
-        public int Watchers { get; set; }
-
-        [JsonPropertyName("pushed_at")]
-        public DateTime LastPushUtc { get; set; }
-
-        public DateTime LastPush => LastPushUtc.ToLocalTime();
+        [JsonPropertyName("created_at")]
+        public DateTime CreatedAt { get; set; }
 
     }
 }
